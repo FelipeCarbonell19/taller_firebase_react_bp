@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 
 const Formulario = () => {
 
-    const objetopersona = {
+    const objPersona = {
         nombre: '',
         apellido: '',
         profesion: '',
@@ -14,7 +14,7 @@ const Formulario = () => {
         cumpleaños: " ",
     }
 
-    const [persona, setpersona] = useState(objetopersona);
+    const [persona, setpersona] = useState(objPersona);
     const [lista, setLista] = useState([]);
     const [modoEdicion, setModoEdicion] = useState(false);
     const [id, setId] = useState('')
@@ -95,12 +95,12 @@ const Formulario = () => {
         }
 
         setModoEdicion(false)
-        setpersona(objetopersona)
+        setpersona(objPersona)
         setError(null)
 
     }
 
-    const confirmarEliminar = (id) => {
+    const deleteConfirm = (id) => {
         let opcion = window.confirm('¿Está seguro que desea eliminar?')
 
         if (!opcion) {
@@ -124,7 +124,7 @@ const Formulario = () => {
 
     const auxEditar = (item) => {
 
-        const objetopersona = {
+        const objPersona = {
             nombre: item.nombre,
             apellido: item.apellido,
             profesion: item.profesion,
@@ -133,7 +133,7 @@ const Formulario = () => {
             cumpleaños: item.cumpleaños,
         }
 
-        setpersona(objetopersona);
+        setpersona(objPersona);
         setModoEdicion(true);
         setId(item.id);
 
@@ -143,26 +143,26 @@ const Formulario = () => {
         e.preventDefault()
 
         if (!persona.nombre) {
-            setError('Campo nombre vacío');
+            setError('Por favor digitar nombre');
             return
         }
 
         if (!persona.apellido) {
-            setError('Campo apellido vacío');
+            setError('Por favor digitar apellido');
             return
         }
 
         if (!persona.profesion) {
-            setError('Campo profesion vacío');
+            setError('Por favor digitar profesion');
             return
         }
 
         if (!persona.edad) {
-            setError('Campo edad vacío');
+            setError('Por favor digitar edad');
             return
         }
         if(!persona.sexo){
-            setError('Seleccione su genero');
+            setError('Por favor seleccionar sexo');
             return
         }
         if (!persona.telefono) {
@@ -170,7 +170,7 @@ const Formulario = () => {
             return
         }
         if(!persona.cumpleaños){
-            setError('Seleccione su fecha');
+            setError('Seleccione fecha');
             return
         }
 
@@ -185,7 +185,7 @@ const Formulario = () => {
             console.log(error)
         }
 
-        setpersona(objetopersona);
+        setpersona(objPersona);
         setModoEdicion(false)
         setError(null)
 
@@ -193,7 +193,7 @@ const Formulario = () => {
 
     const cancelar = () => {
 
-        setpersona(objetopersona)
+        setpersona(objPersona)
         setModoEdicion(false)
         setError(null)
     }
@@ -204,10 +204,9 @@ const Formulario = () => {
             <hr />
             <div className='row'>
                 <div className="col-8">
-                    <h4 className="text-center">Listado de personas - Total {lista.length}</h4>
+                    <h4 className="text-rigth"> Total de personas {lista.length}</h4>
                     {lista.length < 1 ?
-                        <h2 className='mt-5 text-center'>No hay personas listados aún</h2>
-                        :
+                        <h2 className='mt-5 text-center'>No hay personas listados aún</h2>:
                         <table className="table table-white">
                             <thead>
                                 <tr>
@@ -234,7 +233,7 @@ const Formulario = () => {
 
                                             <td>
                                                 <button className='btn btn-danger btn-sm float-end mx-2'
-                                                    onClick={() => confirmarEliminar(item.id)}>Eliminar
+                                                    onClick={() => deleteConfirm(item.id)}>Eliminar
                                                 </button>
                                                 <button className='btn btn-warning btn-sm float-end'
                                                     onClick={() => auxEditar(item)}>Editar
@@ -286,6 +285,7 @@ const Formulario = () => {
                             onChange={(e) => setpersona({ ...persona, edad: e.target.value })}
                             value={persona.edad}
                         />
+                        <a>Seleccione Sexo</a>
                         <select
                             className='form-select mb-2'
                             onChange={(e) => setpersona({ ...persona, sexo: e.target.value })}
@@ -323,6 +323,7 @@ const Formulario = () => {
                             onChange={(e) => setpersona({ ...persona, telefono: e.target.value })}
                             value={persona.telefono}
                         />
+                        <a>Fecha Nacimiento</a>
                         <input
                             className='form-control mb-2'
                             type="date"
