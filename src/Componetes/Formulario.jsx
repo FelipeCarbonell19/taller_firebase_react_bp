@@ -310,6 +310,7 @@ const Formulario = () => {
 
                                         <option value="Masculino">Masculino</option>
 
+
                                     )
                             }
                         </select>
