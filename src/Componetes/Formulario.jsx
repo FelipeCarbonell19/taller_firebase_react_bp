@@ -69,7 +69,7 @@ const Formulario = () => {
         }
 
         if (!persona.telefono) {
-            setError('Campo teléfono vacío');
+            setError('¡Vacio el campo telefono!');
             return
         }
         if(!persona.cumpleaños){
