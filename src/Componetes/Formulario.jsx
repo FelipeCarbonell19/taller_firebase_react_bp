@@ -4,18 +4,22 @@ import { nanoid } from 'nanoid';
 
 const Formulario = () => {
 
-    const objPersona = {
-        nombres: '',
-        apellidos: '',
+    const objetopersona = {
+        nombre: '',
+        apellido: '',
         profesion: '',
-        edad: ''
+        edad: '',
+        sexo: '',
+        telefono: '',
+        cumpleaños: " ",
     }
 
-    const [persona, setPersona] = useState(objPersona);
+    const [persona, setpersona] = useState(objetopersona);
     const [lista, setLista] = useState([]);
     const [modoEdicion, setModoEdicion] = useState(false);
     const [id, setId] = useState('')
     const [error, setError] = useState(null);
+    const [fechaNacimiento, setFechaNacimiento] = React.useState("");
 
 
     useEffect(() => {
@@ -44,34 +48,43 @@ const Formulario = () => {
     const guardarDatos = async (e) => {
         e.preventDefault()
 
-        if (!persona.nombres) {
-            setError('Ingrese El Nombre');
+        if (!persona.nombre) {
+            setError('¡Vacio el campo nombre!');
             return
         }
 
-        if (!persona.apellidos) {
-            setError('Ingrese El Apellido');
+        if (!persona.apellido) {
+            setError('¡Vacio el campo apellido!');
             return
         }
 
         if (!persona.profesion) {
-            setError('Ingrese Su Profesion');
+            setError('¡Vacio el campo profesion!');
             return
         }
 
         if (!persona.edad) {
-            setError('Ingrese Su Edad');
+            setError('¡Vacio el campo edad!');
+            return
+        }
+
+        if (!persona.telefono) {
+            setError('Campo teléfono vacío');
+            return
+        }
+        if(!persona.cumpleaños){
+            setError('Ingrese La Fecha')
             return
         }
 
         try {
 
             const db = firebase.firestore();
-            const nuevaPersona = {
+            const personaNueva = {
                 ...persona,
             }
 
-            await db.collection('personas').add(nuevaPersona);
+            await db.collection('personas').add(personaNueva);
 
             setLista([...lista,
             { id: nanoid(), ...persona }
@@ -82,7 +95,7 @@ const Formulario = () => {
         }
 
         setModoEdicion(false)
-        setPersona(objPersona)
+        setpersona(objetopersona)
         setError(null)
 
     }
@@ -111,14 +124,16 @@ const Formulario = () => {
 
     const auxEditar = (item) => {
 
-        const objPersona = {
-            nombres: item.nombres,
-            apellidos: item.apellidos,
+        const objetopersona = {
+            nombre: item.nombre,
+            apellido: item.apellido,
             profesion: item.profesion,
             edad: item.edad,
+            telefono: item.telefono,
+            cumpleaños: item.cumpleaños,
         }
 
-        setPersona(objPersona);
+        setpersona(objetopersona);
         setModoEdicion(true);
         setId(item.id);
 
@@ -127,28 +142,39 @@ const Formulario = () => {
     const editar = async e => {
         e.preventDefault()
 
-        if (!persona.nombres) {
-            setError('Ingrese El Nombre');
+        if (!persona.nombre) {
+            setError('Campo nombre vacío');
             return
         }
 
-        if (!persona.apellidos) {
-            setError('Ingrese El Apellido');
+        if (!persona.apellido) {
+            setError('Campo apellido vacío');
             return
         }
 
         if (!persona.profesion) {
-            setError('Ingrese La Profesion');
+            setError('Campo profesion vacío');
             return
         }
 
         if (!persona.edad) {
-            setError('Ingrese Su Edad');
+            setError('Campo edad vacío');
+            return
+        }
+        if(!persona.sexo){
+            setError('Seleccione su genero');
+            return
+        }
+        if (!persona.telefono) {
+            setError('Campo teléfono vacío');
+            return
+        }
+        if(!persona.cumpleaños){
+            setError('Seleccione su fecha');
             return
         }
 
         try {
-
 
             const db = firebase.firestore()
             await db.collection('personas').doc(id).update({
@@ -159,47 +185,53 @@ const Formulario = () => {
             console.log(error)
         }
 
-        setPersona(objPersona);
+        setpersona(objetopersona);
         setModoEdicion(false)
         setError(null)
 
     }
 
-
     const cancelar = () => {
 
-        setPersona(objPersona)
+        setpersona(objetopersona)
         setModoEdicion(false)
         setError(null)
     }
 
     return (
         <div className='container-xxl mt-5'>
-            <h1 className='text-center'>REACT-FIREBASE</h1>
+            <h1 className='text-center'>Directorio Persona - REACT-FIREBASE xD</h1>
             <hr />
             <div className='row'>
                 <div className="col-8">
                     <h4 className="text-center">Listado de personas - Total {lista.length}</h4>
                     {lista.length < 1 ?
-                        <h2 className='mt-5 text-center'>Aun no hay personas listadas</h2>
+                        <h2 className='mt-5 text-center'>No hay personas listados aún</h2>
                         :
                         <table className="table table-white">
                             <thead>
                                 <tr>
-                                    <th scope="col">Nombres</th>
-                                    <th scope="col">Apellidos</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Apellido</th>
                                     <th scope="col">Profesion</th>
                                     <th scope="col">Edad</th>
+                                    <th scope="col">Sexo</th>
+                                    <th scope="col">Teléfono</th>
+                                    <th scope="col">Fecha Nacimiento</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {
                                     lista.map((item) => (
                                         <tr key={item.id}>
-                                            <td>{item.nombres}</td>
-                                            <td>{item.apellidos}</td>
+                                            <td>{item.nombre}</td>
+                                            <td>{item.apellido}</td>
                                             <td>{item.profesion}</td>
                                             <td>{item.edad}</td>
+                                            <td>{item.sexo}</td>
+                                            <td>{item.telefono}</td>
+                                            <td>{item.cumpleaños}</td>
+
                                             <td>
                                                 <button className='btn btn-danger btn-sm float-end mx-2'
                                                     onClick={() => confirmarEliminar(item.id)}>Eliminar
@@ -216,9 +248,9 @@ const Formulario = () => {
                     }
                 </div>
                 <div className="col-4">
-                    <h4 className="text-center" color='blue'>
+                    <h4 className="text-center">
                         {
-                            modoEdicion ? 'Editar Persona' : 'Agregar persona'
+                            modoEdicion ? 'Editar persona' : 'Agregar persona'
                         }</h4>
                     <form onSubmit={modoEdicion ? editar : guardarDatos}>
                         {
@@ -227,23 +259,23 @@ const Formulario = () => {
                         <input
                             className='form-control mb-2'
                             type="text"
-                            placeholder='Ingrese nombres'
-                            onChange={(e) => setPersona({ ...persona, nombres: e.target.value })}
-                            value={persona.nombres}
+                            placeholder='Ingrese Nombre'
+                            onChange={(e) => setpersona({ ...persona, nombre: e.target.value })}
+                            value={persona.nombre}
 
                         />
                         <input
                             className='form-control mb-2'
                             type="text"
-                            placeholder='Ingrese apellidos'
-                            onChange={(e) => setPersona({ ...persona, apellidos: e.target.value })}
-                            value={persona.apellidos}
+                            placeholder='Ingrese apellido'
+                            onChange={(e) => setpersona({ ...persona, apellido: e.target.value })}
+                            value={persona.apellido}
                         />
                         <input
                             className='form-control mb-2'
                             type="text"
                             placeholder='Ingrese profesion'
-                            onChange={(e) => setPersona({ ...persona, profesion: e.target.value })}
+                            onChange={(e) => setpersona({ ...persona, profesion: e.target.value })}
                             value={persona.profesion}
                         />
                         <input
@@ -251,8 +283,52 @@ const Formulario = () => {
                             type="number"
                             min={0}
                             placeholder='Ingrese Edad'
-                            onChange={(e) => setPersona({ ...persona, edad: e.target.value })}
+                            onChange={(e) => setpersona({ ...persona, edad: e.target.value })}
                             value={persona.edad}
+                        />
+                        <select
+                            className='form-select mb-2'
+                            onChange={(e) => setpersona({ ...persona, sexo: e.target.value })}
+                        >
+                            <option value={persona.sexo}>{persona.sexo}</option>
+
+                            {
+                                !persona.sexo
+
+                                    ?
+                                    <>
+                                        <option value="Masculino">Masculino</option>
+                                        <option value="Femenino">Femenino</option>
+                                    </>
+                                    :
+
+                                    (persona.sexo === 'Masculino' ?
+
+                                        <option value="Femenino">Femenino</option>
+
+                                        :
+
+                                        <option value="Masculino">Masculino</option>
+
+
+                                    )
+
+                            }
+                        </select>
+                        <input
+                            className='form-control mb-2'
+                            type="number"
+                            min={0}
+                            placeholder='Ingrese Teléfono'
+                            onChange={(e) => setpersona({ ...persona, telefono: e.target.value })}
+                            value={persona.telefono}
+                        />
+                        <input
+                            className='form-control mb-2'
+                            type="date"
+                            placeholder='Ingrese Fecha'
+                            onChange={(e) => setpersona({ ...persona, cumpleaños: e.target.value })}
+                            value={persona.cumpleaños}
                         />
                         {
                             !modoEdicion ? (
